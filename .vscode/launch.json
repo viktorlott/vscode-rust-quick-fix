@@ -1,0 +1,45 @@
+// A launch configuration that compiles the extension and then opens it inside a new window
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+
+			"name": "Run Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			"env": {
+				"SERVER_URL": "${workspaceFolder}/lsp-server/target/debug/rust-fixer-lsp"
+			},
+			"runtimeExecutable": "${execPath}",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"/Users/ViktorL/projects/github/rust-quick-fixes/src/test/suite/file.rs"
+			],
+			"outFiles": [
+				"${workspaceFolder}/out/**/*.js"
+			],
+			"sourceMaps": true,
+			"preLaunchTask": "npm: watch"
+		},
+
+	
+		{
+			"name": "Extension Tests",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"env": {
+				"SERVER_URL": "${workspaceFolder}/out/rust-fixer-lsp"
+			},
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
+			],
+			"outFiles": ["${workspaceFolder}/out/test/**/*.js"]
+		}
+
+	]
+}

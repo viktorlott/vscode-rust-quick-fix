@@ -1,0 +1,74 @@
+{
+  "name": "rust-quick-fixes",
+  "displayName": "Rust quick fixes",
+  "description": "",
+  "version": "0.0.1",
+  "publisher": "vek",
+  "engines": {
+    "vscode": "^1.78.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:rust"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "rust-fixer-lsp",
+      "properties": {
+        "rust-fixer-lsp.serverPath": {
+          "type": "string",
+          "scope": "window",
+          "default": "rust-fixer-lsp",
+          "description": "The path to the rust fixer lsp."
+        },
+        "rust-fixer-lsp.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "verbose",
+          "description": "Some text here"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "rust-quick-fixes.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.78.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "@vscode/test-electron": "^2.3.0",
+    "abortcontroller-polyfill": "^1.7.5",
+    "eslint": "^8.39.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@vscode/wasm-wasi": "^0.8.2",
+    "vscode-languageclient": "^8.1.0"
+  }
+}

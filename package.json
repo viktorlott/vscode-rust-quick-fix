@@ -7,9 +7,6 @@
   "engines": {
     "vscode": "^1.78.0"
   },
-  "categories": [
-    "Other"
-  ],
   "activationEvents": [
     "onLanguage:rust"
   ],
@@ -38,12 +35,7 @@
         }
       }
     },
-    "commands": [
-      {
-        "command": "rust-quick-fixes.helloWorld",
-        "title": "Hello World"
-      }
-    ]
+    "commands": []
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
@@ -68,7 +60,6 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@vscode/wasm-wasi": "^0.8.2",
     "vscode-languageclient": "^8.1.0"
   }
 }

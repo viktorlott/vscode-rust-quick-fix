@@ -11,12 +11,12 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"env": {
-				"SERVER_URL": "${workspaceFolder}/lsp-server/target/debug/rust-fixer-lsp"
+				"SERVER_URL": "${workspaceFolder}/lsp/target/debug/rust-fixer-lsp"
 			},
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"/Users/ViktorL/projects/github/rust-quick-fixes/src/test/suite/file.rs"
+				"${workspaceFolder}/src/test/suite/file.rs"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"

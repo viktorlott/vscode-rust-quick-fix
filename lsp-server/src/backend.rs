@@ -13,12 +13,12 @@ use tower_lsp::{
         TextDocumentIdentifier, TextDocumentSyncCapability, TextDocumentSyncKind, TextEdit, Url,
         WorkDoneProgressOptions, WorkspaceEdit,
     },
-    Client, LanguageServer,
+    Client,
 };
 
 use super::TextDocument;
 
-enum LogKind {
+pub enum LogKind {
     ServerInitialized,
     FileOpened,
     FileClosed,
@@ -42,7 +42,7 @@ impl Backend {
             files: DashMap::new(),
         }
     }
-    async fn log(&self, kind: LogKind) {
+    pub async fn log(&self, kind: LogKind) {
         self.client
             .log_message(
                 MessageType::INFO,
@@ -87,78 +87,8 @@ impl Backend {
     }
 }
 
-#[tower_lsp::async_trait]
-impl LanguageServer for Backend {
-    async fn shutdown(&self) -> Result<()> {
-        Ok(())
-    }
-    async fn initialize(&self, params: InitializeParams) -> Result<InitializeResult> {
-        self.on_initialize(params).await
-    }
-
-    async fn initialized(&self, params: InitializedParams) {
-        self.on_initialized(params).await;
-        self.log(LogKind::ServerInitialized).await
-    }
-
-    async fn did_open(&self, params: DidOpenTextDocumentParams) {
-        self.on_open(params).await;
-        self.log(LogKind::FileOpened).await
-    }
-
-    async fn did_close(&self, params: DidCloseTextDocumentParams) {
-        self.on_close(params).await;
-        self.log(LogKind::FileClosed).await
-    }
-
-    async fn did_save(&self, params: DidSaveTextDocumentParams) {
-        self.on_save(params).await;
-        self.log(LogKind::FileSaved).await
-    }
-
-    async fn did_change(&self, params: DidChangeTextDocumentParams) {
-        self.log(LogKind::FileChanged).await;
-        self.on_change(params).await;
-    }
-
-    async fn did_change_configuration(&self, params: DidChangeConfigurationParams) {
-        self.on_change_configuration(params).await
-    }
-
-    async fn did_change_workspace_folders(&self, params: DidChangeWorkspaceFoldersParams) {
-        self.on_change_workspace_folders(params).await
-    }
-
-    async fn did_create_files(&self, params: CreateFilesParams) {
-        self.log(LogKind::FilesCreated).await;
-        self.on_create_files(params).await
-    }
-
-    async fn did_rename_files(&self, params: RenameFilesParams) {
-        self.log(LogKind::FilesRenamed).await;
-        self.on_rename_files(params).await
-    }
-
-    async fn did_delete_files(&self, params: DeleteFilesParams) {
-        self.log(LogKind::FilesDeleted).await;
-        self.on_delete_files(params).await
-    }
-
-    async fn did_change_watched_files(&self, params: DidChangeWatchedFilesParams) {
-        self.on_change_watched_files(params).await
-    }
-
-    async fn code_action_resolve(&self, param: CodeAction) -> Result<CodeAction> {
-        self.on_code_action_resolve(param).await
-    }
-
-    async fn code_action(&self, params: CodeActionParams) -> Result<Option<CodeActionResponse>> {
-        self.trigger_code_action(params).await
-    }
-}
-
 impl Backend {
-    async fn on_initialize(&self, _: InitializeParams) -> Result<InitializeResult> {
+    pub async fn on_initialize(&self, _: InitializeParams) -> Result<InitializeResult> {
         let server_info = Some(ServerInfo {
             name: "rust-fixer-lsp".to_string(),
             version: Some(env!("CARGO_PKG_VERSION").to_string()),
@@ -184,27 +114,27 @@ impl Backend {
         })
     }
 
-    async fn on_initialized(&self, params: InitializedParams) {}
-    async fn on_open(&self, params: DidOpenTextDocumentParams) {
+    pub async fn on_initialized(&self, params: InitializedParams) {}
+    pub async fn on_open(&self, params: DidOpenTextDocumentParams) {
         self.files.insert(
             params.text_document.uri.clone(),
             TextDocument::new(params.text_document),
         );
     }
-    async fn on_close(&self, params: DidCloseTextDocumentParams) {}
-    async fn on_save(&self, params: DidSaveTextDocumentParams) {}
-    async fn on_change(&self, params: DidChangeTextDocumentParams) {
+    pub async fn on_close(&self, params: DidCloseTextDocumentParams) {}
+    pub async fn on_save(&self, params: DidSaveTextDocumentParams) {}
+    pub async fn on_change(&self, params: DidChangeTextDocumentParams) {
         self.files.alter(&params.text_document.uri, |_, file| {
             file.commit(params.content_changes, params.text_document.version)
         });
     }
-    async fn on_change_configuration(&self, params: DidChangeConfigurationParams) {}
-    async fn on_change_workspace_folders(&self, params: DidChangeWorkspaceFoldersParams) {}
-    async fn on_create_files(&self, params: CreateFilesParams) {}
-    async fn on_rename_files(&self, params: RenameFilesParams) {}
-    async fn on_delete_files(&self, params: DeleteFilesParams) {}
-    async fn on_change_watched_files(&self, params: DidChangeWatchedFilesParams) {}
-    async fn trigger_code_action(
+    pub async fn on_change_configuration(&self, params: DidChangeConfigurationParams) {}
+    pub async fn on_change_workspace_folders(&self, params: DidChangeWorkspaceFoldersParams) {}
+    pub async fn on_create_files(&self, params: CreateFilesParams) {}
+    pub async fn on_rename_files(&self, params: RenameFilesParams) {}
+    pub async fn on_delete_files(&self, params: DeleteFilesParams) {}
+    pub async fn on_change_watched_files(&self, params: DidChangeWatchedFilesParams) {}
+    pub async fn trigger_code_action(
         &self,
         params: CodeActionParams,
     ) -> Result<Option<CodeActionResponse>> {
@@ -228,7 +158,7 @@ impl Backend {
         }
     }
 
-    async fn on_code_action_resolve(&self, mut param: CodeAction) -> Result<CodeAction> {
+    pub async fn on_code_action_resolve(&self, mut param: CodeAction) -> Result<CodeAction> {
         param.is_preferred = Some(true);
         Result::Ok(param)
     }

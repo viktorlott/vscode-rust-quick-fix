@@ -98,7 +98,7 @@ mod tests {
                 "range": {
                     "start": {
                         "line": 2,
-                        "character": 2
+                        "cgharacter": 2
                     },
                     "end": {
                         "line": 3,
